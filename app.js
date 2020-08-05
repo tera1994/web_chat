@@ -3,9 +3,10 @@
 var express = require("express");
 var app = express();
 
+app.use(express.static('./'));
+
 app.get("/", function(req, res) {
-    res.setHeader("Content-Type", "text/html; charset=utf-8");
-    res.end("Hello, World!\n\n💚 🔒.js");
+    res.sendFile(__dirname+'/main.html');
 });
 
 // DO NOT DO app.listen() unless we're testing this directly
