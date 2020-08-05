@@ -1,4 +1,4 @@
-#サーバ起動手順
+# サーバ起動手順
 
 あらかじめnpm, nodejsをインストールしておく
 
@@ -12,3 +12,23 @@ node server.js
 ブラウザでchattest.ddns.netにアクセスする
 
 別タブでページを２つ表示して、他方のPeerIDをテキストエリアにコピー&ペーストし、発信ボタンを押すと、ビデオ通話が始まる
+
+# 開発環境
+nodejs version 12.18.0
+npm version 6.14.5
+
+# nodejsとnpm インストール手順(Linux)
+sudo apt update
+
+sudo apt install curl
+
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash \
+    && export NVM_DIR="$HOME/.nvm" \
+    && . $NVM_DIR/nvm.sh \
+    && nvm install 12.18.0 \
+    && nvm alias default 12.18.0 \
+    && nvm use default
+
+# nodejsとnpm インストール手順(Windows)
+https://nodejs.org/ja/download/ で、
+Windows Installer (.msi)をダウンロードして実行
