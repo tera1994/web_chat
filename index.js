@@ -1,14 +1,17 @@
-const express = require("express");
+"use strict";
 
-const app = express();
-const port=8080;
+var app = require("./app.js");
 
-app.use(express.static('./'));
+require("greenlock-express")
+  .init({
+    packageRoot: __dirname,
 
-app.get('/', function (req, res) {
-    res.sendFile(__dirname+'\\main.html');
-});
+    // contact for security and critical bug notices
+    configDir: "./greenlock.d",
 
-app.listen(port, ()=> {
-    console.log('Server started on port:'+port);
-});
+    // whether or not to run at cloudscale
+    cluster: false
+  })
+  // Serves on 80 and 443
+  // Get's SSL certificates magically!
+  .serve(app);

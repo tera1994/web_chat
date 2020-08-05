@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "greenlock-express": "^4.0.3",
     "letsencrypt-express": "^2.0.7"
   },
   "devDependencies": {
