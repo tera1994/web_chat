@@ -5,13 +5,10 @@
 以下のコマンドを順番に実行する
 
 git clone https://github.com/hiro7281/web_chat.git
-
 cd web_chat
-
 npm i
+node server.js
 
-node index.js
-
-ブラウザでlocalhost:8080にアクセスする
+ブラウザでchattest.ddns.netにアクセスする
 
 別タブでページを２つ表示して、他方のPeerIDをテキストエリアにコピー&ペーストし、発信ボタンを押すと、ビデオ通話が始まる
