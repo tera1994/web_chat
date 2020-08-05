@@ -45,3 +45,16 @@ peer.on('call', mediaConnection => {
   mediaConnection.answer(localStream);
   setEventListener(mediaConnection);
 });
+
+//エラー処理
+peer.on('error', err => {
+  alert(err.message);
+});
+
+peer.on('connection', conn => {
+  document.getElementById('my-id').textContent = document.getElementById('my-id').textContent + conn
+});
+
+peer.on('disconnected', id => {
+  document.getElementById('my-id').textContent = document.getElementById('my-id').textContent + conn
+});
