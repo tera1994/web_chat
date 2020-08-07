@@ -3,10 +3,10 @@
 var express = require("express");
 var app = express();
 
-app.use(express.static('./'));
+app.use(express.static('./public/'));
 
 app.get("/", function(req, res) {
-    res.sendFile(__dirname+'/main.html');
+    res.sendFile(__dirname+'/public/html/main.html');
 });
 
 // DO NOT DO app.listen() unless we're testing this directly
