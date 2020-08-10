@@ -1,5 +1,5 @@
 let myID;
-let ws = new WebSocket('ws://localhost:8080')
+let ws = new WebSocket('ws://localhost:8081')
 
 
 // サーバからのデータ受信時に呼ばれる
@@ -10,12 +10,13 @@ ws.onmessage = function (event) {
 
     switch (msg.event) {
         case "findOpponent":
+            document.getElementById('wrap').innerHTML = "チャット相手が見つかりました</br>";
             break;
         case "receiveMes":
             document.getElementById('wrap').innerHTML += (msg.data + "</br>");
             break;
         case "endedChat":
-            document.getElementById('wrap').innerHTML ="";
+            document.getElementById('wrap').innerHTML ="通信が切れました" + "</br>" + "新しい相手を探します"+"</br>";
             let find_opp_msg_end = {
                 event: "searchOpponent",
                 date: Date.now(),
@@ -30,7 +31,7 @@ ws.onmessage = function (event) {
                 date: Date.now(),
                 clientId: myID
             };
-            document.getElementById('wrap').innerHTML ="";
+            document.getElementById('wrap').innerHTML ="チャット相手を探しています"+"</br>";
             ws.send(JSON.stringify(find_opp_msg));
             
             break;
