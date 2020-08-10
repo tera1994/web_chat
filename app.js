@@ -2,11 +2,15 @@
 
 var express = require("express");
 var app = express();
+var startWs = require("./service/wsService.js");
+startWs();
 
 app.use(express.static('./public/'));
 
 app.get("/", function(req, res) {
     res.sendFile(__dirname+'/public/html/index.html');
+    //res.sendFile(__dirname+'/public/html/test.html');
+    console.log(req.ip);
 });
 
 app.get("/chat", function(req, res) {
