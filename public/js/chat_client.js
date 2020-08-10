@@ -53,6 +53,12 @@ function send_text() {
 }
 
 function stop_chat() {
+    let msg = {
+        event: "endChat",
+        date: Date.now(),
+        clientId: myID
+    };
+    ws.send(JSON.stringify(msg));
     ws.close();
     window.location.href = "/";
 }
