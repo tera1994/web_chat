@@ -15,7 +15,13 @@ ws.onmessage = function (event) {
             document.getElementById('wrap').innerHTML += (msg.data + "</br>");
             break;
         case "endedChat":
-
+            document.getElementById('wrap').innerHTML ="";
+            let find_opp_msg = {
+                event: "searchOpponent",
+                date: Date.now(),
+                clientId: myID
+            };
+            ws.send(JSON.stringify(find_opp_msg));
             break;
         case "yourID":
             myID = msg.data;
@@ -24,7 +30,9 @@ ws.onmessage = function (event) {
                 date: Date.now(),
                 clientId: myID
             };
-            ws.send(JSON.stringify(msg));
+            document.getElementById('wrap').innerHTML ="";
+            ws.send(JSON.stringify(find_opp_msg));
+            
             break;
     }
 };
@@ -41,4 +49,9 @@ function send_text() {
 
     document.getElementById('wrap').innerHTML += (input_message + "</br>");
     document.getElementById("input_message").value = "";
+}
+
+function stop_chat() {
+    ws.close();
+    window.location.href = "/";
 }
