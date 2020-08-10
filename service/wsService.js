@@ -2,6 +2,8 @@ var https = require("https");
 var fs = require("fs");
 var WebSocket = require("ws");
 
+var wslist = [];
+
 var startWs = () => {
   var server;
   var wss;
@@ -16,13 +18,42 @@ var startWs = () => {
     wss = new WebSocket.Server({ port: 8080 });
   }
 
-  wss.on('connection', function connection(ws,req) {
+  wss.on('connection', (ws,req) => {
     const ip = req.connection.remoteAddress;
     console.log('---connect from ' + ip);
     ws.send('Hello from wssServer!');
-    ws.on('message', function incoming(message) {
-        console.log(message);
+    var client_id = make_random();
+    var dt = new Date();
+    var unixtime = dt.getTime();
+    var yourIDobj = {
+      "event": "yourID",
+      "data": client_id,
+      "date": unixtime
+    }
+    ws.send(JSON.stringify(yourIDobj));
+    wslist.push({id: client_id, ws: ws});
+
+    ws.on('message', (message) => {
+      var parsed = JSON.parse(message);
+      switch(parsed.event){
+        case "searchOpponent":
+
+        break;
+
+        case "sendMes":
+
+        break;
+
+        case "endChat":
+
+        break;
+      }
     });
+
+    ws.onclose = (event) => {
+      console.log(client_id)
+    }
+
   	ws.onerror = (event) => {
   		console.error(event.message);
   		console.log(event)
@@ -33,4 +64,17 @@ var startWs = () => {
     server.listen(8080)
   }
 }
+
+function make_random(){
+  var S="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+  var N=16
+  do {
+    var new_id = Array.from(Array(N)).map(()=>S[Math.floor(Math.random()*S.length)]).join('');
+    var f = wslist.find(item => {
+      return (item.id === new_id)
+    })
+  } while(f)
+  return new_id;
+}
+
 module.exports = startWs;
