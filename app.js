@@ -6,9 +6,12 @@ var app = express();
 app.use(express.static('./public/'));
 
 app.get("/", function(req, res) {
-    res.sendFile(__dirname+'/public/html/main.html');
+    res.sendFile(__dirname+'/public/html/index.html');
 });
 
+app.get("/chat", function(req, res) {
+    res.sendFile(__dirname+'/public/html/chat.html');
+});
 
 // DO NOT DO app.listen() unless we're testing this directly
 if (require.main === module) {
