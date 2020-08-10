@@ -1,5 +1,5 @@
 let myID;
-let ws = new WebSocket('ws://localhost:5001')
+let ws = new WebSocket('ws://localhost:8080')
 
 
 // サーバからのデータ受信時に呼ばれる
@@ -16,12 +16,12 @@ ws.onmessage = function (event) {
             break;
         case "endedChat":
             document.getElementById('wrap').innerHTML ="";
-            let find_opp_msg = {
+            let find_opp_msg_end = {
                 event: "searchOpponent",
                 date: Date.now(),
                 clientId: myID
             };
-            ws.send(JSON.stringify(find_opp_msg));
+            ws.send(JSON.stringify(find_opp_msg_end));
             break;
         case "yourID":
             myID = msg.data;
@@ -39,6 +39,8 @@ ws.onmessage = function (event) {
 
 function send_text() {
     let input_message = document.getElementById("input_message").value;
+    console.log(input_message);
+    document.getElementById('wrap').innerHTML += (input_message + "</br>");
     let msg = {
         event: "sendMes",
         data: input_message,
@@ -46,8 +48,6 @@ function send_text() {
         clientId: myID
     };
     ws.send(JSON.stringify(msg));
-
-    document.getElementById('wrap').innerHTML += (input_message + "</br>");
     document.getElementById("input_message").value = "";
 }
 
