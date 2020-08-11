@@ -52,7 +52,28 @@ var startWs = () => {
         break;
 
         case "sendMes":
-
+        console.log("get sendMes request from "+parsed.clientId);
+        var target = wslist.findIndex(w => {
+          return w.id == parsed.clientId
+        });
+        if(target == -1){
+          console.log("client id "+parsed.clientId+" doesn't exist");
+        }else if(wslist[target].pair == ""){
+          console.log("client "+parsed.clientId+" is not chatting");
+        }else{
+          var opponent = wslist.find(w => {
+            return w.id == wslist[target].pair;
+          })
+          console.log(opponent)
+          var mes = {
+            event: "receiveMes",
+            data: parsed.data,
+            date: getDate()
+          }
+          var mesStr = JSON.stringify(mes);
+          opponent.ws.send(mesStr);
+          console.log(mesStr)
+        }
         break;
 
         case "endChat":
