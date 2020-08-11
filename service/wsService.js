@@ -38,8 +38,17 @@ var startWs = () => {
       var parsed = JSON.parse(message);
       switch(parsed.event){
         case "searchOpponent":
-        console.log("get searchOpponent request from "+client_id);
-        chat_que.push(client_id);
+        console.log("get searchOpponent request from "+parsed.clientId);
+        var target = wslist.findIndex(w => {
+          return w.id == parsed.clientId
+        });
+        if(target == -1){
+          console.log("client id "+parsed.clientId+" doesn't exist");
+        }else if(wslist[target].pair != ""){
+          console.log("client "+parsed.clientId+" is already matching with "+wslist[target].pair);
+        }else{
+          chat_que.push(parsed.clientId);
+        }
         break;
 
         case "sendMes":
