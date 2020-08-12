@@ -46,6 +46,8 @@ var startWs = () => {
           console.log("client id "+parsed.clientId+" doesn't exist");
         }else if(wslist[target].pair != ""){
           console.log("client "+parsed.clientId+" is already matching with "+wslist[target].pair);
+        }else if(chat_que.includes(parsed.clientId)) {
+          console.log("client "+parsed.clientId+" is already searching");
         }else{
           chat_que.push(parsed.clientId);
         }
