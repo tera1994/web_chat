@@ -77,7 +77,30 @@ var startWs = () => {
         break;
 
         case "endChat":
-
+        console.log("get endChat request from "+parsed.clientId);
+        var target = wslist.findIndex(w => {
+          return w.id == parsed.clientId
+        });
+        if(target == -1){
+          console.log("client id "+parsed.clientId+" doesn't exist");
+        }else if(wslist[target].pair == ""){
+          console.log("client "+parsed.clientId+" is not chatting");
+        }else{
+          var opponent = wslist.find(w => {
+            return w.id == wslist[target].pair;
+          });
+          wslist[target].pair = "";
+          chatpair = chatpair.filter(c => {
+            return c.a != wslist[target].id && c.b != wslist[target].id
+          });
+          console.log(chatpair)
+          var mes = {
+            event: "endedChat",
+            date: getDate()
+          }
+          var mesStr = JSON.stringify(mes);
+          opponent.ws.send(mesStr);
+        }
         break;
       }
     });
