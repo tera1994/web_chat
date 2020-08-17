@@ -1,6 +1,9 @@
 let myID;
 let ws = new WebSocket('ws://localhost:8081')
-
+let btn
+window.onload = function(){
+btn = document.getElementById("b1");
+btn.disabled = "disabled";};
 
 // サーバからのデータ受信時に呼ばれる
 ws.onmessage = function (event) {
@@ -11,12 +14,14 @@ ws.onmessage = function (event) {
     switch (msg.event) {
         case "findOpponent":
             document.getElementById('wrap').innerHTML = "チャット相手が見つかりました</br>";
+            btn.disabled = ""
             break;
         case "receiveMes":
-            document.getElementById('wrap').innerHTML += (msg.data + "</br>");
+            document.getElementById('wrap').innerHTML += ("<div class=\"says\"><p>" + msg.data + "</p></div></br>");
             break;
         case "endedChat":
             document.getElementById('wrap').innerHTML ="通信が切れました" + "</br>" + "新しい相手を探します"+"</br>";
+            btn.disabled = "disabled"
             let find_opp_msg_end = {
                 event: "searchOpponent",
                 date: Date.now(),
@@ -32,6 +37,7 @@ ws.onmessage = function (event) {
                 clientId: myID
             };
             document.getElementById('wrap').innerHTML ="チャット相手を探しています"+"</br>";
+            btn.disabled = "disabled"
             ws.send(JSON.stringify(find_opp_msg));
             
             break;
@@ -40,8 +46,10 @@ ws.onmessage = function (event) {
 
 function send_text() {
     let input_message = document.getElementById("input_message").value;
-    console.log(input_message);
-    document.getElementById('wrap').innerHTML += (input_message + "</br>");
+    if (input_message === ""){
+        return
+    }
+    document.getElementById('wrap').innerHTML += ("<div class=\"mycomment\"><p>" + input_message + "</p></div>");
     let msg = {
         event: "sendMes",
         data: input_message,

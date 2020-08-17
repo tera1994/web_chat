@@ -9,6 +9,7 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="../css/chat.css">
 
   <script src="/js/chat_client.js"></script>
 
@@ -31,16 +32,18 @@
       </ul>
     </div>
   </nav>
+
   <center>
     <div id="wrap">
     </div>
   </center>
+  
 
   <center>
     <form id="form1" action="#">
       <input type="text" id="input_message" value="">
-      <input type="button" class="btn btn-primary" onclick="send_text();" value="送信">
-      <input type="button" class="btn btn-primary" onclick="stop_chat();" value="チャットをやめる"
+      <input type="button" class="btn btn-primary" id="b1" onclick="send_text();" value="送信">
+      <input type="button" class="btn btn-primary" onclick="stop_chat();" value="チャットをやめる">
     </form>
     <div id="output_message"></div>
   </center>
