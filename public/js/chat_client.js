@@ -1,5 +1,5 @@
 let myID;
-let ws = new WebSocket('ws://localhost:8081')
+let ws = new WebSocket('ws://localhost:8080')
 let btn
 window.onload = function(){
 btn = document.getElementById("b1");
