@@ -8,10 +8,14 @@ startWs();
 app.use(express.static('./public/'));
 
 app.get("/", function(req, res) {
-    res.sendFile(__dirname+'/public/html/test.html');
-    console.log(req.ip)
+    res.sendFile(__dirname+'/public/html/index.html');
+    //res.sendFile(__dirname+'/public/html/test.html');
+    console.log(req.ip);
 });
 
+app.get("/chat", function(req, res) {
+    res.sendFile(__dirname+'/public/html/chat.html');
+});
 
 // DO NOT DO app.listen() unless we're testing this directly
 if (require.main === module) {
