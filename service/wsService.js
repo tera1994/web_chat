@@ -3,7 +3,8 @@ var fs = require("fs");
 var WebSocket = require("ws");
 
 var wslist = [];
-var chat_que = [];
+var guest_que = [];
+var driver_que = [];
 var designing = false;
 var chatpair = [];
 
@@ -37,8 +38,8 @@ var startWs = () => {
     ws.on('message', (message) => {
       var parsed = JSON.parse(message);
       switch(parsed.event){
-        case "searchOpponent":
-        console.log("get searchOpponent request from "+parsed.clientId);
+        case "searchGuest":
+        console.log("get searchGuest request from "+parsed.clientId);
         var target = wslist.findIndex(w => {
           return w.id == parsed.clientId
         });
@@ -46,10 +47,30 @@ var startWs = () => {
           console.log("client id "+parsed.clientId+" doesn't exist");
         }else if(wslist[target].pair != ""){
           console.log("client "+parsed.clientId+" is already matching with "+wslist[target].pair);
-        }else if(chat_que.includes(parsed.clientId)) {
-          console.log("client "+parsed.clientId+" is already searching");
+        }else if(guest_que.includes(parsed.clientId)) {
+          console.log("client "+parsed.clientId+" is already searching guest");
+        }else if(driver_que.includes(parsed.clientId)){
+          console.log("client "+parsed.clientId+" is already searching driver");
         }else{
-          chat_que.push(parsed.clientId);
+          guest_que.push(parsed.clientId);
+        }
+        break;
+
+        case "searchDriver":
+        console.log("get searchDriver request from "+parsed.clientId);
+        var target = wslist.findIndex(w => {
+          return w.id == parsed.clientId
+        });
+        if(target == -1){
+          console.log("client id "+parsed.clientId+" doesn't exist");
+        }else if(wslist[target].pair != ""){
+          console.log("client "+parsed.clientId+" is already matching with "+wslist[target].pair);
+        }else if(guest_que.includes(parsed.clientId)) {
+          console.log("client "+parsed.clientId+" is already searching guest");
+        }else if(driver_que.includes(parsed.clientId)){
+          console.log("client "+parsed.clientId+" is already searching driver");
+        }else{
+          driver_que.push(parsed.clientId);
         }
         break;
 
@@ -116,21 +137,31 @@ var startWs = () => {
         console.log("client id "+client_id+" doesn't exist");
       }else if(wslist[target].pair == ""){
         console.log("client "+client_id+" was not chatting");
-      }else{
-        var opponent = wslist.find(w => {
-          return w.id == wslist[target].pair;
-        });
-        wslist[target].pair = "";
-        chatpair = chatpair.filter(c => {
-          return c.a != wslist[target].id && c.b != wslist[target].id
+        wslist = wslist.filter(w => {
+          return w.id != client_id
         });
         console.log(chatpair)
+        console.log(wslist)
+      }else{
+        var opponent = wslist.findIndex(w => {
+          return w.id == wslist[target].pair;
+        });
+        wslist[opponent].pair = "";
+        wslist[target].pair = "";
+        chatpair = chatpair.filter(c => {
+          return c.g != wslist[target].id && c.d != wslist[target].id
+        });
+        wslist = wslist.filter(w => {
+          return w.id != client_id
+        });
         var mes = {
           event: "endedChat",
           date: getDate()
         }
         var mesStr = JSON.stringify(mes);
-        opponent.ws.send(mesStr);
+        wslist[opponent].ws.send(mesStr);
+        console.log(chatpair)
+        console.log(wslist)
       }
     }
 
@@ -147,29 +178,29 @@ var startWs = () => {
 
 // matching client
 setInterval(() => {
-  if(chat_que.length >= 2) {
-    var a_id = chat_que.shift();
-    var b_id = chat_que.shift();
-    chatpair.push({a: a_id, b: b_id});
-    var acli = wslist.findIndex(w => {
-      return w.id == a_id;
+  if(guest_que.length >= 1 && driver_que.length >= 1) {
+    var g_id = guest_que.shift();
+    var d_id = driver_que.shift();
+    chatpair.push({g: g_id, d: d_id});
+    var gcli = wslist.findIndex(w => {
+      return w.id == g_id;
     });
-    var bcli = wslist.findIndex(w => {
-      return w.id == b_id;
+    var dcli = wslist.findIndex(w => {
+      return w.id == d_id;
     });
-    wslist[acli].pair = b_id;
-    wslist[bcli].pair = a_id;
+    wslist[gcli].pair = d_id;
+    wslist[dcli].pair = g_id;
     var mes = {
       event: "findOpponent",
       date: getDate()
     }
     var mesStr = JSON.stringify(mes);
-    wslist[acli].ws.send(mesStr);
-    wslist[bcli].ws.send(mesStr);
+    wslist[gcli].ws.send(mesStr);
+    wslist[dcli].ws.send(mesStr);
     console.log("matching client");
-    console.log(a_id+" to "+b_id);
-    console.log(chatpair)
-    console.log(wslist)
+    console.log("Guest:"+g_id+" to Driver:"+d_id);
+    console.log(chatpair);
+    console.log(wslist);
   }
 }, 1000)
 
