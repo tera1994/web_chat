@@ -108,7 +108,30 @@ var startWs = () => {
     });
 
     ws.onclose = (event) => {
-      console.log("client disconnected id="+client_id)
+      console.log("websocket close from "+client_id);
+      var target = wslist.findIndex(w => {
+        return w.id == client_id
+      });
+      if(target == -1){
+        console.log("client id "+client_id+" doesn't exist");
+      }else if(wslist[target].pair == ""){
+        console.log("client "+client_id+" was not chatting");
+      }else{
+        var opponent = wslist.find(w => {
+          return w.id == wslist[target].pair;
+        });
+        wslist[target].pair = "";
+        chatpair = chatpair.filter(c => {
+          return c.a != wslist[target].id && c.b != wslist[target].id
+        });
+        console.log(chatpair)
+        var mes = {
+          event: "endedChat",
+          date: getDate()
+        }
+        var mesStr = JSON.stringify(mes);
+        opponent.ws.send(mesStr);
+      }
     }
 
   	ws.onerror = (event) => {
